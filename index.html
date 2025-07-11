@@ -26,10 +26,6 @@
             border-radius: 5px;
             text-align: center;
         }
-        #chat-container {
-            width: 100%;
-            height: 100vh;
-        }
         .success { background-color: #d4edda; color: #155724; }
         .info { background-color: #d1ecf1; color: #0c5460; }
     </style>
@@ -41,7 +37,7 @@
             <strong>Setup Complete!</strong><br>
             Your Supabase URL: https://uokhbjcwcsyoedioekst.supabase.co<br>
             Edge Function: swift-worker<br>
-            The chat widget should appear in the bottom right corner.
+            The chat widget is embedded below.
         </div>
         <div class="status success">
             ✅ Extensions will load from your Supabase Edge Function<br>
@@ -50,7 +46,7 @@
         </div>
         
         <p>This page demonstrates the Voiceflow chat widget with Supabase-powered extensions. 
-        The chat should appear as an overlay. Try the different extension features:</p>
+        The chat appears embedded below. Try the different extension features:</p>
         
         <ul>
             <li><strong>Forms</strong> - Data saved to Supabase database</li>
@@ -59,6 +55,9 @@
             <li><strong>Confetti, Feedback</strong> - Fun interactive elements</li>
         </ul>
     </div>
+
+    <!-- Chat Container for Embedded Widget -->
+    <div id="chat-container" style="width: 100%; height: 600px; margin: 20px auto; max-width: 800px; border: 1px solid #ddd; border-radius: 10px;"></div>
 
     <!-- Canvas for confetti effect -->
     <canvas id="confetti-canvas" style="position: fixed; z-index: 999; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none;"></canvas>
@@ -117,15 +116,14 @@
               window.voiceflow.chat.load({
                 verify: { projectID: '686b9c898829770316d162c5' },
                 url: 'https://general-runtime.voiceflow.com',
-                versionID: 'development',
-                user: {
-                  name: 'Test User',
+                versionID: 'production',
+                voice: {
+                  url: 'https://general-runtime.voiceflow.com'
                 },
                 render: {
                   mode: 'embedded',
                   target: document.getElementById('chat-container')
                 },
-                autostart: true,
                 allowDangerousHTML: true,
                 assistant: {
                   extensions: validExtensions,
@@ -133,7 +131,7 @@
               });
               console.log('🎉 Chat widget initialized with', validExtensions.length, 'extensions!');
             };
-            v.src = 'https://cdn.voiceflow.com/widget/bundle.mjs';
+            v.src = 'https://cdn.voiceflow.com/widget-next/bundle.mjs';
             v.type = 'text/javascript';
             s.parentNode.insertBefore(v, s);
           })(document, 'script');
@@ -163,16 +161,20 @@
                 window.voiceflow.chat.load({
                   verify: { projectID: '686b9c898829770316d162c5' },
                   url: 'https://general-runtime.voiceflow.com',
-                  versionID: 'development',
-                  user: { name: 'Test User' },
-                  render: { mode: 'embedded' },
-                  autostart: true,
+                  versionID: 'production',
+                  voice: {
+                    url: 'https://general-runtime.voiceflow.com'
+                  },
+                  render: { 
+                    mode: 'embedded',
+                    target: document.getElementById('chat-container')
+                  },
                   allowDangerousHTML: true,
                   assistant: { extensions: validExtensions },
                 });
                 console.log('✅ Fallback: Chat widget initialized with local extensions!');
               };
-              v.src = 'https://cdn.voiceflow.com/widget/bundle.mjs';
+              v.src = 'https://cdn.voiceflow.com/widget-next/bundle.mjs';
               v.type = 'text/javascript';
               s.parentNode.insertBefore(v, s);
             })(document, 'script');
