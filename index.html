@@ -141,58 +141,16 @@
           
         } catch (error) {
           console.error('❌ Failed to load extensions from Supabase:', error);
-          console.log('🔄 Falling back to local extensions...');
           
-          // Fallback to local extensions
-          try {
-            const { VideoExtension, TimerExtension, FormExtension, MapExtension, 
-                    FileUploadExtension, DateExtension, ConfettiExtension, 
-                    FeedbackExtension } = await import('./extensions.js');
-            
-            const validExtensions = [
-              VideoExtension, TimerExtension, FormExtension, MapExtension, 
-              FileUploadExtension, DateExtension, ConfettiExtension, FeedbackExtension
-            ].filter(ext => ext !== undefined);
-            
-            (function (d, t) {
-              var v = d.createElement(t),
-                s = d.getElementsByTagName(t)[0];
-              v.onload = function () {
-                window.voiceflow.chat.load({
-                  verify: { projectID: '686b9c898829770316d162c5' },
-                  url: 'https://general-runtime.voiceflow.com',
-                  versionID: 'production',
-                  voice: {
-                    url: 'https://general-runtime.voiceflow.com'
-                  },
-                  render: { 
-                    mode: 'embedded',
-                    target: document.getElementById('chat-container')
-                  },
-                  allowDangerousHTML: true,
-                  assistant: { extensions: validExtensions },
-                });
-                console.log('✅ Fallback: Chat widget initialized with local extensions!');
-              };
-              v.src = 'https://cdn.voiceflow.com/widget/bundle.mjs';
-              v.type = 'text/javascript';
-              s.parentNode.insertBefore(v, s);
-            })(document, 'script');
-            
-          } catch (fallbackError) {
-            console.error('❌ Fallback also failed:', fallbackError);
-            
-            // Show error message to user
-            const container = document.querySelector('.container');
-            container.innerHTML += `
-              <div class="status" style="background-color: #f8d7da; color: #721c24;">
-                <strong>⚠️ Extensions Loading Failed</strong><br>
-                Supabase Error: ${error.message}<br>
-                Fallback Error: ${fallbackError.message}<br>
-                <small>Please deploy your Edge Function to Supabase or check the console for more details.</small>
-              </div>
-            `;
-          }
+          // Show error message to user
+          const container = document.querySelector('.container');
+          container.innerHTML += `
+            <div class="status" style="background-color: #f8d7da; color: #721c24;">
+              <strong>⚠️ Extensions Loading Failed</strong><br>
+              Error: ${error.message}<br>
+              <small>Please deploy your Edge Function to Supabase or check the console for more details.</small>
+            </div>
+          `;
         }
       }
 
