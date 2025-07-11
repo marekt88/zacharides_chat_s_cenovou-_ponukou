@@ -56,17 +56,27 @@
           const extensionsModule = await import(moduleUrl);
           console.log('✅ Extensions imported successfully');
           
-          // Filter out undefined extensions
-          const validExtensions = [
-            extensionsModule.VideoExtension,
-            extensionsModule.TimerExtension,
-            extensionsModule.FormExtension,
-            extensionsModule.MapExtension,
-            extensionsModule.FileUploadExtension,
-            extensionsModule.DateExtension,
-            extensionsModule.ConfettiExtension,
-            extensionsModule.FeedbackExtension,
-          ].filter(ext => ext !== undefined);
+          // Filter out undefined extensions and validate them
+          const extensionList = [
+            { name: 'VideoExtension', ext: extensionsModule.VideoExtension },
+            { name: 'TimerExtension', ext: extensionsModule.TimerExtension },
+            { name: 'FormExtension', ext: extensionsModule.FormExtension },
+            { name: 'MapExtension', ext: extensionsModule.MapExtension },
+            { name: 'FileUploadExtension', ext: extensionsModule.FileUploadExtension },
+            { name: 'DateExtension', ext: extensionsModule.DateExtension },
+            { name: 'ConfettiExtension', ext: extensionsModule.ConfettiExtension },
+            { name: 'FeedbackExtension', ext: extensionsModule.FeedbackExtension },
+          ];
+          
+          const validExtensions = [];
+          extensionList.forEach(({name, ext}) => {
+            if (ext && typeof ext === 'object' && ext.name && ext.type && (ext.render || ext.effect)) {
+              validExtensions.push(ext);
+              console.log(`✅ ${name} is valid`);
+            } else {
+              console.warn(`⚠️ ${name} is invalid or undefined:`, ext);
+            }
+          });
           
           console.log('Valid extensions found:', validExtensions.length);
           
@@ -80,6 +90,10 @@
                 verify: { projectID: '686b9c898829770316d162c5' },
                 url: 'https://general-runtime.voiceflow.com',
                 versionID: 'production',
+                user: {
+                  name: 'Test User',
+                  userID: 'test-user-' + Date.now()
+                },
                 voice: {
                   url: "https://runtime-api.voiceflow.com"
                 },
@@ -87,6 +101,7 @@
                   mode: 'embedded',
                   target: document.getElementById('chat-container')
                 },
+                autostart: true,
                 allowDangerousHTML: true,
                 assistant: {
                   extensions: validExtensions,
@@ -125,6 +140,10 @@
                   verify: { projectID: '686b9c898829770316d162c5' },
                   url: 'https://general-runtime.voiceflow.com',
                   versionID: 'production',
+                  user: {
+                    name: 'Test User',
+                    userID: 'test-user-' + Date.now()
+                  },
                   voice: {
                     url: "https://runtime-api.voiceflow.com"
                   },
@@ -132,6 +151,7 @@
                     mode: 'embedded',
                     target: document.getElementById('chat-container')
                   },
+                  autostart: true,
                   allowDangerousHTML: true,
                   assistant: { extensions: validExtensions },
                 });
