@@ -1,26 +1,60 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Voiceflow Chat Widget</title>
+    <title>Test Voiceflow Extensions with Supabase</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        html, body {
-            height: 100%;
-            width: 100%;
+        body {
             font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
         }
-        #chat-container {
-            width: 100%;
-            height: 100vh;
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .status {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            text-align: center;
+        }
+        .success { background-color: #d4edda; color: #155724; }
+        .info { background-color: #d1ecf1; color: #0c5460; }
     </style>
 </head>
 <body>
-    <div id="chat-container"></div>
+    <div class="container">
+        <h1>🚀 Voiceflow Extensions Test</h1>
+        <div class="status info">
+            <strong>Setup Complete!</strong><br>
+            Your Supabase URL: https://uokhbjcwcsyoedioekst.supabase.co<br>
+            Edge Function: swift-worker<br>
+            The chat widget should appear in the bottom right corner.
+        </div>
+        <div class="status success">
+            ✅ Extensions will load from your Supabase Edge Function<br>
+            ✅ Form submissions will be saved to your database<br>
+            ✅ File uploads will be stored in your Supabase Storage
+        </div>
+        
+        <p>This page demonstrates the Voiceflow chat widget with Supabase-powered extensions. 
+        The chat should appear as an overlay. Try the different extension features:</p>
+        
+        <ul>
+            <li><strong>Forms</strong> - Data saved to Supabase database</li>
+            <li><strong>File Upload</strong> - Files stored in Supabase Storage</li>
+            <li><strong>Video, Timer, Maps, Date Picker</strong> - Interactive widgets</li>
+            <li><strong>Confetti, Feedback</strong> - Fun interactive elements</li>
+        </ul>
+    </div>
 
     <!-- Canvas for confetti effect -->
     <canvas id="confetti-canvas" style="position: fixed; z-index: 999; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none;"></canvas>
@@ -56,47 +90,37 @@
           const extensionsModule = await import(moduleUrl);
           console.log('✅ Extensions imported successfully');
           
-          // Filter out undefined extensions and validate them
-          const extensionList = [
-            { name: 'VideoExtension', ext: extensionsModule.VideoExtension },
-            { name: 'TimerExtension', ext: extensionsModule.TimerExtension },
-            { name: 'FormExtension', ext: extensionsModule.FormExtension },
-            { name: 'MapExtension', ext: extensionsModule.MapExtension },
-            { name: 'FileUploadExtension', ext: extensionsModule.FileUploadExtension },
-            { name: 'DateExtension', ext: extensionsModule.DateExtension },
-            { name: 'ConfettiExtension', ext: extensionsModule.ConfettiExtension },
-            { name: 'FeedbackExtension', ext: extensionsModule.FeedbackExtension },
-          ];
-          
-          const validExtensions = [];
-          extensionList.forEach(({name, ext}) => {
-            if (ext && typeof ext === 'object' && ext.name && ext.type && (ext.render || ext.effect)) {
-              validExtensions.push(ext);
-              console.log(`✅ ${name} is valid`);
-            } else {
-              console.warn(`⚠️ ${name} is invalid or undefined:`, ext);
-            }
-          });
+          // Filter out undefined extensions
+          const validExtensions = [
+            extensionsModule.VideoExtension,
+            extensionsModule.TimerExtension,
+            extensionsModule.FormExtension,
+            extensionsModule.MapExtension,
+            extensionsModule.FileUploadExtension,
+            extensionsModule.DateExtension,
+            extensionsModule.ConfettiExtension,
+            extensionsModule.FeedbackExtension,
+          ].filter(ext => ext !== undefined);
           
           console.log('Valid extensions found:', validExtensions.length);
           
-          // Initialize Voiceflow chat with extensions (embedded mode)
+          // Initialize Voiceflow chat with extensions
           (function (d, t) {
             var v = d.createElement(t),
               s = d.getElementsByTagName(t)[0];
             v.onload = function () {
               console.log('✅ Voiceflow widget loaded, initializing with extensions...');
               window.voiceflow.chat.load({
-                verify: { projectID: '686b9c898829770316d162c5' },
+                verify: { projectID: '686e5bef59d5ed3c78923aec' },
                 url: 'https://general-runtime.voiceflow.com',
-                versionID: 'production',
-                voice: {
-                  url: "https://runtime-api.voiceflow.com"
+                versionID: 'development',
+                user: {
+                  name: 'Test User',
                 },
                 render: {
-                  mode: 'embedded',
-                  target: document.getElementById('chat-container')
+                  mode: 'overlay',
                 },
+                autostart: true,
                 allowDangerousHTML: true,
                 assistant: {
                   extensions: validExtensions,
@@ -104,7 +128,7 @@
               });
               console.log('🎉 Chat widget initialized with', validExtensions.length, 'extensions!');
             };
-            v.src = 'https://cdn.voiceflow.com/widget-next/bundle.mjs';
+            v.src = 'https://cdn.voiceflow.com/widget/bundle.mjs';
             v.type = 'text/javascript';
             s.parentNode.insertBefore(v, s);
           })(document, 'script');
@@ -132,22 +156,18 @@
                 s = d.getElementsByTagName(t)[0];
               v.onload = function () {
                 window.voiceflow.chat.load({
-                  verify: { projectID: '686b9c898829770316d162c5' },
+                  verify: { projectID: '686e5bef59d5ed3c78923aec' },
                   url: 'https://general-runtime.voiceflow.com',
-                  versionID: 'production',
-                  voice: {
-                    url: "https://runtime-api.voiceflow.com"
-                  },
-                  render: {
-                    mode: 'embedded',
-                    target: document.getElementById('chat-container')
-                  },
+                  versionID: 'development',
+                  user: { name: 'Test User' },
+                  render: { mode: 'overlay' },
+                  autostart: true,
                   allowDangerousHTML: true,
                   assistant: { extensions: validExtensions },
                 });
                 console.log('✅ Fallback: Chat widget initialized with local extensions!');
               };
-              v.src = 'https://cdn.voiceflow.com/widget-next/bundle.mjs';
+              v.src = 'https://cdn.voiceflow.com/widget/bundle.mjs';
               v.type = 'text/javascript';
               s.parentNode.insertBefore(v, s);
             })(document, 'script');
@@ -155,14 +175,14 @@
           } catch (fallbackError) {
             console.error('❌ Fallback also failed:', fallbackError);
             
-            // Show error message in chat container
-            const container = document.getElementById('chat-container');
-            container.innerHTML = `
-              <div style="padding: 20px; text-align: center; color: #721c24; background: #f8d7da;">
+            // Show error message to user
+            const container = document.querySelector('.container');
+            container.innerHTML += `
+              <div class="status" style="background-color: #f8d7da; color: #721c24;">
                 <strong>⚠️ Extensions Loading Failed</strong><br>
                 Supabase Error: ${error.message}<br>
                 Fallback Error: ${fallbackError.message}<br>
-                <small>Please check the console for more details.</small>
+                <small>Please deploy your Edge Function to Supabase or check the console for more details.</small>
               </div>
             `;
           }
