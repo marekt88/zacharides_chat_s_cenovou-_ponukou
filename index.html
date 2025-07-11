@@ -113,11 +113,13 @@
               window.voiceflow.chat.load({
                 verify: { projectID: '686b9c898829770316d162c5' },
                 url: 'https://general-runtime.voiceflow.com',
-                versionID: 'development',
-                render: {
-                  mode: 'embedded',
+                versionID: 'production',
+                voice: {
+                  url: "https://runtime-api.voiceflow.com"
                 },
-                autostart: true,
+                render: {
+                  mode: 'overlay',
+                },
                 allowDangerousHTML: true,
                 assistant: {
                   extensions: validExtensions,
@@ -125,7 +127,7 @@
               });
               console.log('🎉 Chat widget initialized with', validExtensions.length, 'extensions!');
             };
-            v.src = 'https://cdn.voiceflow.com/widget/bundle.mjs';
+            v.src = 'https://cdn.voiceflow.com/widget-next/bundle.mjs';
             v.type = 'text/javascript';
             s.parentNode.insertBefore(v, s);
           })(document, 'script');
@@ -153,18 +155,19 @@
                 s = d.getElementsByTagName(t)[0];
               v.onload = function () {
                 window.voiceflow.chat.load({
-                  verify: { projectID: '686e5bef59d5ed3c78923aec' },
+                  verify: { projectID: '686b9c898829770316d162c5' },
                   url: 'https://general-runtime.voiceflow.com',
-                  versionID: 'development',
-                  user: { name: 'Test User' },
+                  versionID: 'production',
+                  voice: {
+                    url: "https://runtime-api.voiceflow.com"
+                  },
                   render: { mode: 'overlay' },
-                  autostart: true,
                   allowDangerousHTML: true,
                   assistant: { extensions: validExtensions },
                 });
                 console.log('✅ Fallback: Chat widget initialized with local extensions!');
               };
-              v.src = 'https://cdn.voiceflow.com/widget/bundle.mjs';
+              v.src = 'https://cdn.voiceflow.com/widget-next/bundle.mjs';
               v.type = 'text/javascript';
               s.parentNode.insertBefore(v, s);
             })(document, 'script');
